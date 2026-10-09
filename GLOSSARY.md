@@ -27,14 +27,23 @@ surface beneath it. Requires a DEM; computed here from the point cloud itself.
 
 **Total height** — Vertical distance from the terrain surface to the crown apex.
 
-**Blind spot** — The measured collapse in point density at roughly 1.0–1.6 m above
-ground (to ~72 pts/m²/m from ~390 below and ~130 above). An artifact of
-photogrammetric dense matching in cluttered mid-storey, and coincident with the
-DBH band.
+**Blind spot** — The collapse in point density at ~1.05–1.10 m above ground: 37
+pts/m²/m, 5.7× below the canopy peak. Intrinsic to dense-matching reconstruction under
+**closed canopy**, not a ground-surface artifact — reproduced against nine ground
+surfaces and two published algorithms. Its apparent height shifts with the DEM; its depth
+does not.
 
-**Point budget** — The number of points available on a stem within the DBH band.
-Canopy stems carry ~20 (30 cm DBH) to ~34 (50 cm DBH) points on a 30 cm segment.
-The governing constraint on method choice.
+**Point budget** — Points on a stem-sized object in the DBH band: **~15–20 per 0.30 m
+segment, and flat in diameter.** Wider stems do not collect more points, so canopy trees
+are no better resolved than cacao. No stem wider than ~20 cm was detectable at all. The
+governing constraint on method choice.
+
+**Woody point** — A point of woody material, identified *geometrically* (kNN-PCA
+linearity and verticality) rather than by any stored label. ~2.7% of points in the DBH
+band. This is the only reliable stem signal available.
+
+**Stem** — A woody vertical structure detected geometrically. ~530 estimated in the
+3.78 ha analysis footprint (140/ha), a lower bound.
 
 ## Data and labels
 
@@ -73,17 +82,23 @@ metrics. The leading concrete method if we build rather than adopt.
 **treeID** — ForestFormer3D's per-tree instance identifier (the local equivalent of
 `PredInstance`).
 
-**Wood point** — A point in the wood class. Wood is a *sparse selective subset* of
-the cloud: in the DBH band it is 0.10 pts/m² against 2.6 pts/m² for all classes,
-so a 30 cm canopy stem may carry only 1–3 wood points. The label therefore serves
-as a **stem seed generator**, not the surface a diameter is fitted to.
+**Wood point** — A point in the `FM=1` class. It is genuinely woody material — 21× more
+woody than ground by geometry, verticality 0.583 vs 0.231, median HAG 15.7 m; branches
+and dead wood. **But it carries no usable signal in the DBH band**: only 1.5% of points
+there are `FM=1`, at 6.8% precision. Scored as a continuous woodiness predictor across
+the band, `FM` gives **AUC 0.476 — below the 0.5 chance line**. It is effectively a
+*height* label: stems and foliage at the same height get the same label. Stem detection
+there must be geometric.
 
 **Canopy stem** — Distinguished from cacao and from other wood by size and
 position, not by class: both are labelled wood.
 
-**Tile** — One processed point-cloud file. At least two are known: the repo LAS
-(72.2M pts, Z 860–975) and `/home/usuario/3DFormer/cloud.laz` (168.9M pts, Z 248–740),
-which are different places and were produced by different routes.
+**Tile** — One processed point-cloud file. The repo LAS is a **stripped 72.2M-point tile
+of 3dtrees.earth dataset 3479 "Agroforestal"** (207,364,864 pts, EPSG:32618). It kept
+only `PredSemantic_FM`; the full file also carries `PredInstance_FM`, `PredScore_FM`,
+`PredInstance_SAT`, `PredSemantic_SAT`, plus `ReturnNumber`, `NumberOfReturns`,
+`Intensity` and `UserData`. `/home/usuario/3DFormer/cloud.laz` (168.9M pts, Z 248–740)
+is a different dataset entirely.
 
 **Field truth** — Tape-measured DBH and height from a field campaign. Deliberately
 withheld from this effort and never used for fitting *or* tuning.
