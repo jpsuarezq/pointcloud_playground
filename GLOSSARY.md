@@ -39,9 +39,18 @@ The governing constraint on method choice.
 ## Data and labels
 
 **`PredSemantic_FM`** — Extra byte dimension in the input LAS holding a 3-class
-label: 0 = ground/low vegetation, 1 = mid-storey minority, 2 = high canopy.
-A coarse height proxy, **not** a segmentation: at the DBH band it is a 54/4/42
-mixture and does not isolate canopy stems.
+semantic label: **0 = ground, 1 = wood, 2 = foliage** (likely *follaje/madera*).
+Verified by kNN-PCA geometry: wood has the highest linearity (0.555), lowest
+planarity (0.310) and by far the most vertical principal axis (14.4% of its
+neighbourhoods elongated and vertical, vs 1.6% for ground).
+
+**Wood point** — A point labelled `FM=1`. Wood is a *sparse selective subset* of
+the cloud: in the DBH band it is 0.10 pts/m² against 2.6 pts/m² for all classes,
+so a 30 cm canopy stem may carry only 1–3 wood points. The label therefore serves
+as a **stem seed generator**, not the surface a diameter is fitted to.
+
+**Canopy stem** — Distinguished from cacao and from other wood by size and
+position, not by class: both are labelled wood.
 
 **Field truth** — Tape-measured DBH and height from a field campaign. Deliberately
 withheld from this effort and never used for fitting *or* tuning.
