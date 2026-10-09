@@ -72,8 +72,23 @@ codebase. Integrated into 3dtrees.earth since Aug 2026. CC BY-NC 4.0.
 **CspStandSegmentation** — Cylindrical stand segmentation (Frey & Schindler, 2024),
 the tool 3dtrees.earth uses to extract DBH, tree height and crown volume per tree.
 
-**`PredInstance`** — Per-tree instance identifier written by the platform. We hold
-only `PredSemantic_FM`; whether `PredInstance` can be re-fetched is open.
+**`PredInstance_FM`** — Per-tree instance identifier written by the platform
+(1,749 instances in our tile). ForestMamba.
+
+**`PredInstance_SAT`** — A second, independent per-tree instance segmentation from
+SegmentAnyTree (1,318 instances). Two segmentations disagreeing with each other is a
+free cross-method consistency check — directly useful under the no-validation rule.
+
+**`PredScore_FM`** — Per-**instance** score (−1.0 to 0.965), constant within each of the
+1,749 FM instances. The platform describes it as per-point confidence; the shipped data
+is per-tree. A ready-made per-tree confidence field.
+
+**`Original cloud index`** — Marks which of **two merged source scans** a point came
+from (36.6M vs 35.5M points, different footprints and Z ranges). Any co-registration
+error between them propagates into the DBH band.
+
+**`PredSemantic_SAT`** — SegmentAnyTree's 2-class semantic field (0/1), distinct from
+ForestMamba's 3-class `PredSemantic_FM`.
 
 **ITSMe** — R package (`lmterryn/ITSMe`) of individual-tree structural metrics.
 `dbh_pc()` fits a least-squares circle through a 6 mm slice at 1.3 m, with QC
@@ -93,12 +108,14 @@ there must be geometric.
 **Canopy stem** — Distinguished from cacao and from other wood by size and
 position, not by class: both are labelled wood.
 
-**Tile** — One processed point-cloud file. The repo LAS is a **stripped 72.2M-point tile
-of 3dtrees.earth dataset 3479 "Agroforestal"** (207,364,864 pts, EPSG:32618). It kept
-only `PredSemantic_FM`; the full file also carries `PredInstance_FM`, `PredScore_FM`,
-`PredInstance_SAT`, `PredSemantic_SAT`, plus `ReturnNumber`, `NumberOfReturns`,
-`Intensity` and `UserData`. `/home/usuario/3DFormer/cloud.laz` (168.9M pts, Z 248–740)
-is a different dataset entirely.
+**Tile** — One processed point-cloud file. `pointclouds/segmentado_crop.laz` is a
+72,162,549-point cut of 3dtrees.earth dataset 3479 "Agroforestal" carrying six extra
+dimensions: `Original cloud index`, `PredInstance_FM`, `PredSemantic_FM`, `PredScore_FM`,
+`PredInstance_SAT`, `PredSemantic_SAT`. It is itself a **merge of two source scans**
+(36.6M + 35.5M points). The older `segmentado_RGB_color.las` is the same extent but kept
+only `PredSemantic_FM` and dropped `ReturnNumber`, `NumberOfReturns`, `Intensity` and
+`UserData`. `/home/usuario/3DFormer/cloud.laz` (168.9M pts, Z 248–740) is a different
+dataset entirely.
 
 **Field truth** — Tape-measured DBH and height from a field campaign. Deliberately
 withheld from this effort and never used for fitting *or* tuning.
