@@ -38,19 +38,35 @@ The governing constraint on method choice.
 
 ## Data and labels
 
-**`PredSemantic_FM`** — Extra byte dimension in the input LAS holding a 3-class
-semantic label: **0 = ground, 1 = wood, 2 = foliage** (likely *follaje/madera*).
-Verified by kNN-PCA geometry: wood has the highest linearity (0.555), lowest
-planarity (0.310) and by far the most vertical principal axis (14.4% of its
-neighbourhoods elongated and vertical, vs 1.6% for ground).
+**`PredSemantic_FM`** — Extra byte dimension in the input LAS holding the 3-class
+*semantic* output of **ForestFormer3D** (Nguyen et al., ICCV 2025): ground, wood,
+leaf. Verified by kNN-PCA geometry — wood is the most linear (0.555), least planar
+(0.310) and most vertically-aligned class (14.4% of its neighbourhoods elongated and
+vertical, vs 1.6% for ground). Wood is therefore the **2.9%** class, not the 80% one.
 
-**Wood point** — A point labelled `FM=1`. Wood is a *sparse selective subset* of
+**ForestFormer3D** — Joint semantic and instance segmentation model for forest
+point clouds. Outputs a per-point class *and* a per-tree `treeID`. Runs locally at
+`/home/usuario/3DFormer/ForestFormer3D/` with a trained checkpoint. Licence
+CC BY-NC 4.0 (non-commercial).
+
+**ForestMamba** — Successor to ForestFormer3D (BMVC 2026), same codebase, with a
+released checkpoint reported to beat the paper numbers. CC BY-NC 4.0.
+
+**treeID** — ForestFormer3D's per-tree instance identifier. Present in the source
+cloud but **discarded** by the script that produced the repo LAS. Recovering it
+would give individual-tree segmentation essentially for free.
+
+**Wood point** — A point in the wood class. Wood is a *sparse selective subset* of
 the cloud: in the DBH band it is 0.10 pts/m² against 2.6 pts/m² for all classes,
 so a 30 cm canopy stem may carry only 1–3 wood points. The label therefore serves
 as a **stem seed generator**, not the surface a diameter is fitted to.
 
 **Canopy stem** — Distinguished from cacao and from other wood by size and
 position, not by class: both are labelled wood.
+
+**Tile** — One processed point-cloud file. Note the source cloud and the repo LAS
+are different tiles at different elevations; provenance per tile is not yet
+established.
 
 **Field truth** — Tape-measured DBH and height from a field campaign. Deliberately
 withheld from this effort and never used for fitting *or* tuning.
