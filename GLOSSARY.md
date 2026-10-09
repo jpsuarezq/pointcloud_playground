@@ -38,23 +38,40 @@ The governing constraint on method choice.
 
 ## Data and labels
 
-**`PredSemantic_FM`** — Extra byte dimension in the input LAS holding the 3-class
-*semantic* output of **ForestFormer3D** (Nguyen et al., ICCV 2025): ground, wood,
-leaf. Verified by kNN-PCA geometry — wood is the most linear (0.555), least planar
-(0.310) and most vertically-aligned class (14.4% of its neighbourhoods elongated and
-vertical, vs 1.6% for ground). Wood is therefore the **2.9%** class, not the 80% one.
+**`PredSemantic_FM`** — Extra byte dimension in the input LAS: the *semantic* output
+of **ForestMamba** as run by the 3dtrees.earth platform (FM = ForestMamba), 3 classes
+— ground, wood, leaf. Verified by kNN-PCA geometry: wood is the most linear (0.555),
+least planar (0.310) and most vertically-aligned class (14.4% of its neighbourhoods
+elongated and vertical, vs 1.6% for ground). Wood is therefore the **2.9%** class, not
+the 80% one.
 
-**ForestFormer3D** — Joint semantic and instance segmentation model for forest
-point clouds. Outputs a per-point class *and* a per-tree `treeID`. Runs locally at
-`/home/usuario/3DFormer/ForestFormer3D/` with a trained checkpoint. Licence
-CC BY-NC 4.0 (non-commercial).
+**3dtrees.earth** — Open platform (Fraunhofer IPM, Univ. Freiburg, GFZ et al.) that
+processes close-range LiDAR via a Galaxy pipeline. **The source of our LAS.** Its
+documented default workflow already computes per-tree DBH, tree height, crown volume,
+species and a CHM. See `Adopt or build` ticket.
 
-**ForestMamba** — Successor to ForestFormer3D (BMVC 2026), same codebase, with a
-released checkpoint reported to beat the paper numbers. CC BY-NC 4.0.
+**ForestFormer3D** — Joint semantic and instance segmentation model (Nguyen et al.,
+ICCV 2025). Installed locally at `/home/usuario/3DFormer/ForestFormer3D/` with a
+trained checkpoint, but **not run on our data**. Licence CC BY-NC 4.0.
 
-**treeID** — ForestFormer3D's per-tree instance identifier. Present in the source
-cloud but **discarded** by the script that produced the repo LAS. Recovering it
-would give individual-tree segmentation essentially for free.
+**ForestMamba** — Successor to ForestFormer3D (Nguyen et al., BMVC 2026), same
+codebase. Integrated into 3dtrees.earth since Aug 2026. CC BY-NC 4.0.
+
+**SegmentAnyTree** — Tree instance segmentation model (Wielgosz et al., 2024) used by
+3dtrees.earth. Its output is what makes per-tree structural metrics possible.
+
+**CspStandSegmentation** — Cylindrical stand segmentation (Frey & Schindler, 2024),
+the tool 3dtrees.earth uses to extract DBH, tree height and crown volume per tree.
+
+**`PredInstance`** — Per-tree instance identifier written by the platform. We hold
+only `PredSemantic_FM`; whether `PredInstance` can be re-fetched is open.
+
+**ITSMe** — R package (`lmterryn/ITSMe`) of individual-tree structural metrics.
+`dbh_pc()` fits a least-squares circle through a 6 mm slice at 1.3 m, with QC
+metrics. The leading concrete method if we build rather than adopt.
+
+**treeID** — ForestFormer3D's per-tree instance identifier (the local equivalent of
+`PredInstance`).
 
 **Wood point** — A point in the wood class. Wood is a *sparse selective subset* of
 the cloud: in the DBH band it is 0.10 pts/m² against 2.6 pts/m² for all classes,
@@ -64,9 +81,9 @@ as a **stem seed generator**, not the surface a diameter is fitted to.
 **Canopy stem** — Distinguished from cacao and from other wood by size and
 position, not by class: both are labelled wood.
 
-**Tile** — One processed point-cloud file. Note the source cloud and the repo LAS
-are different tiles at different elevations; provenance per tile is not yet
-established.
+**Tile** — One processed point-cloud file. At least two are known: the repo LAS
+(72.2M pts, Z 860–975) and `/home/usuario/3DFormer/cloud.laz` (168.9M pts, Z 248–740),
+which are different places and were produced by different routes.
 
 **Field truth** — Tape-measured DBH and height from a field campaign. Deliberately
 withheld from this effort and never used for fitting *or* tuning.
