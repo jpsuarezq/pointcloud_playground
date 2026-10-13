@@ -1,0 +1,79 @@
+{
+ "canopy_trees": 674,
+ "measured": 312,
+ "refused": 362,
+ "measured_frac": 0.463,
+ "confidence": {
+  "medium": 193,
+  "high": 78,
+  "low": 41
+ },
+ "seed": {
+  "intensity": 46,
+  "base": 53,
+  "band": 119,
+  "wood": 94
+ },
+ "slab": {
+  "0.15": 224,
+  "0.3": 88
+ },
+ "refused_with_band0": 312,
+ "refused_with_band_ge10": 1,
+ "dbh_cm": {
+  "all": [
+   15.6,
+   22.7,
+   30.7,
+   41.3,
+   58.2
+  ],
+  "high": [
+   16.9,
+   20.4,
+   26.0,
+   33.1,
+   46.1
+  ],
+  "medium": [
+   16.4,
+   25.4,
+   32.8,
+   42.9,
+   55.4
+  ],
+  "low": [
+   13.3,
+   20.9,
+   33.5,
+   57.4,
+   79.0
+  ]
+ },
+ "height_m": [
+  14.5,
+  17.7,
+  23.5,
+  29.4,
+  32.3
+ ],
+ "arc": {
+  "all": [
+   0.31,
+   0.5,
+   0.88
+  ],
+  "high": [
+   0.38,
+   0.5,
+   0.81
+  ],
+  "medium": [
+   0.38,
+   0.56,
+   0.94
+  ]
+ },
+ "buttress_suspected": 36,
+ "span_spread_cm_median": 5.55
+}

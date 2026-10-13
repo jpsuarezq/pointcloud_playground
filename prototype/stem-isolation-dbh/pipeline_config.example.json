@@ -1,0 +1,31 @@
+{
+  "input": "/path/to/cloud.laz",
+  "out": "/path/to/run-output",
+
+  "fields": {
+    "instance": "PredInstance_FM",
+    "semantic": "PredSemantic_FM",
+    "score": "PredScore_FM",
+    "scan_index": "Original cloud index"
+  },
+
+  "wood_class": 1,
+  "ground_class": 0,
+  "foliage_class": 2,
+
+  "canopy_top_hag_m": 12.0,
+  "dbh_height_m": 1.3,
+  "band_half_m": 0.15,
+  "band_half_wide_m": 0.3,
+  "ring_rmax_m": 0.45,
+  "ring_rmax_wide_m": 0.65,
+  "valid_arc": 0.35,
+  "valid_dbh_max_m": 1.0,
+
+  "smrf_cell_m": 0.25,
+  "dem_res_m": 0.25,
+  "dem_fill_m": 2.0,
+
+  "export_point_cap": 400000,
+  "tau": null
+}

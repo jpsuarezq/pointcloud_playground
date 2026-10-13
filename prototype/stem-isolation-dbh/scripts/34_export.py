@@ -64,7 +64,9 @@ for k in keys:
         ExtraBytesParams(name="hag", type=np.float32),
     ])
     r = res.get(k, {})
-    conf = r.get("confidence", "none")
+    conf = r.get("confidence") or "none"
+    if r.get("status") == "refused":
+        conf = "none"
     sub = conf if conf in ("high", "medium", "low") else "refused"
     d = f"{TREES}/{sub}"
     os.makedirs(d, exist_ok=True)
@@ -79,7 +81,7 @@ for k in keys:
     table.append(dict(
         id_arbol=k, latitud=round(lat, 7), longitud=round(lon, 7),
         DBH_cm=r.get("d_ring_cm", ""), altura_m=r.get("top_m", ""),
-        confianza=r.get("confidence", "refused"), estado=r.get("status"),
+        confianza=conf, estado=r.get("status"),
         arco=r.get("qc", {}).get("arc", ""), seed=r.get("seed_kind", ""),
         inclinacion_deg=r.get("axis_tilt_deg", ""), contrafuerte=r.get("buttress_suspected", ""),
         n_pts=r.get("n_pts"), pts_banda=r.get("n_band"),
