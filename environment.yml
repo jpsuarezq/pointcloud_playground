@@ -1,0 +1,33 @@
+# Working environment for the canopy-tree DBH / height pipeline.
+# Resolves wayfinder ticket #6:
+#   https://github.com/jpsuarezq/pointcloud_playground/issues/6
+#
+# Decision: conda is repaired and kept (the breakage was a single corrupted
+# stub, not conda itself); the pipeline runs in the existing `nksr` env. This
+# manifest pins the *pipeline-relevant* subset of that env so it can be
+# recreated elsewhere. It is deliberately minimal — the geometric method needs
+# no ML framework, no rasterio, and no PDAL python bindings.
+#
+# Reproduce:
+#   conda env create -f environment.yml
+#   conda activate pointcloud-dbh
+
+name: pointcloud-dbh
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - numpy=1.26.4
+  - scipy=1.14.1
+  - scikit-learn=1.6.0
+  - matplotlib=3.9.1
+  - pip
+  - pip:
+      - laspy[lazrs]==2.5.4   # must-have: preserves the six extra dimensions on round-trip
+      - open3d==0.16.1        # geometry: KD-trees, RANSAC, axis fitting
+
+# System dependency (not pip/conda): PDAL 2.3.0. Used ONLY for ground filtering
+# (filters.smrf) and format conversion where the extra dimensions do not matter.
+# PDAL drops the extra dimensions on write and cannot even see them, so it is
+# never used for any round-trip that must preserve PredSemantic_FM /
+# PredInstance_FM / PredInstance_SAT — those go through laspy + lazrs.
