@@ -63,15 +63,19 @@ for k in keys:
         ExtraBytesParams(name="inst_fm", type=np.uint16),
         ExtraBytesParams(name="hag", type=np.float32),
     ])
+    r = res.get(k, {})
+    conf = r.get("confidence", "none")
+    sub = conf if conf in ("high", "medium", "low") else "refused"
+    d = f"{TREES}/{sub}"
+    os.makedirs(d, exist_ok=True)
     las = laspy.LasData(hdr)
     las.x, las.y, las.z = Pw[:, 0], Pw[:, 1], Pw[:, 2]
     las.intensity = np.asarray(inten[idx][sel], dtype=np.uint16)
     las.sem_fm = np.asarray(fm[idx][sel], dtype=np.uint8)
     las.inst_fm = np.full(len(sel), k, dtype=np.uint16)
     las.hag = hw.astype(np.float32)
-    las.write(f"{TREES}/tree_{k}.laz")
+    las.write(f"{d}/tree_{k}.laz")
 
-    r = res.get(k, {})
     table.append(dict(
         id_arbol=k, latitud=round(lat, 7), longitud=round(lon, 7),
         DBH_cm=r.get("d_ring_cm", ""), altura_m=r.get("top_m", ""),

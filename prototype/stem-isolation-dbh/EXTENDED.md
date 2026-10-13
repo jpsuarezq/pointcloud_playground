@@ -78,11 +78,31 @@ Measured DBH cm p10/50/90: **high 16.9/26.0/46.1**, **medium 16.4/32.8/55.4**,
 - **Table**: `results/tabla_arboles.csv` — `id_arbol, latitud, longitud, DBH_cm,
   altura_m, confianza, estado, arco, seed, inclinacion_deg, contrafuerte, n_pts,
   pts_banda, motivo, n_exportados`. Coordinates WGS84 (EPSG:4326).
-- **Per-tree clouds**: `pointclouds/trees/tree_<id>.laz` — 674 files, EPSG:32618,
-  extra dims `sem_fm`, `inst_fm`, `hag`; decimated to ≤ 400 k pts for viewing.
-  (Git-ignored via `pointclouds`.)
+- **Per-tree clouds**: `pointclouds/trees/<conf>/tree_<id>.laz` — **split by
+  confidence**: `high/` (78), `medium/` (193), `low/` (41), `refused/` (362).
+  EPSG:32618, extra dims `sem_fm`, `inst_fm`, `hag`; decimated to ≤ 400 k pts for
+  viewing. (Git-ignored via `pointclouds`.)
 - **Full results**: `results/results_multi.json`, `results/results_all.json`,
   `results/results_sample_ext.json`.
+
+## Column glossary (`tabla_arboles.csv`)
+
+| Column | Meaning |
+|---|---|
+| `id_arbol` | Tree id — the `PredInstance_FM` instance number. |
+| `latitud`, `longitud` | WGS84 (EPSG:4326) centroid of the lower stem (0.5–2.5 m). |
+| `DBH_cm` | Diameter at breast height (1.3 m HAG), perpendicular to the fitted stem axis, cm. Empty if refused. |
+| `altura_m` | Total height above ground (max HAG of the instance), m. |
+| `confianza` | `high` / `medium` / `low` / `none`. |
+| `estado` | `measured` or `refused`. |
+| `arco` | Arc coverage of the accepted ring (fraction of angular bins filled, 0–1). |
+| `seed` | Which seed isolated the axis: `wood` (FM), `intensity` (proxy), `base` (lower-stem centroid), `band` (DBH-band cluster). |
+| `inclinacion_deg` | Tilt of the fitted stem axis from vertical, degrees. |
+| `contrafuerte` | `True` if the 1.3 m ring is > 1.35× the 3 m ring (buttress suspected). |
+| `n_pts` | Total points in the instance. |
+| `pts_banda` | Points in the 1.15–1.45 m band. |
+| `motivo` | Refusal reason (empty if measured). |
+| `n_exportados` | Points written to the `.laz` (after the 400 k cap). |
 
 ### Preview (tallest 12 measured)
 
