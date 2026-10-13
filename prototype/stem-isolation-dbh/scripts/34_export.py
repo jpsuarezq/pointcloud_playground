@@ -21,7 +21,7 @@ fm = np.asarray(np.memmap(f"{C}/sem_fm.u1", dtype=np.uint8, mode="r", shape=(n,)
 inten = np.asarray(np.memmap(f"{C}/intensity.u2", dtype=np.uint16, mode="r", shape=(n,)))
 hag = np.asarray(np.load(f"{H}/hag.npy", mmap_mode="r"))
 
-res = {r["tree"]: r for r in json.load(open(f"{O}/results_all.json"))}
+res = {r["tree"]: r for r in json.load(open(f"{O}/results_multi.json"))}
 rows = json.load(open(f"{O}/canopy_summary.json"))
 keys = [r[0] for r in rows]
 

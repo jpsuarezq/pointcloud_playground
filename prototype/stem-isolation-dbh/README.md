@@ -65,7 +65,7 @@ persistent wood column 4; insufficient arc 2; QC reject 4.
 - **Naive horizontal slice vs axis-perpendicular: median ratio 3.25x (max 5.2x).**
   The failure is not the ~6–15% ellipse from lean; it is the slice catching
   buttress, fork and neighbours. See `figures/proto_fig3_agreement.png`.
-- **Taper extrapolation from 2–5 m does not hold:** only 4 of 17 trees agree with
+- **Taper extrapolation from 2–5 m does not hold:** only 2 of 14 trees agree with
   the direct measurement within 25%; ratio spans 0.18x–13x. The "clean 2–5 m zone"
   is *not* clean on tall trees — the ring profile is contaminated by forks and
   branches, and is frequently non-monotonic with height.

@@ -1,2 +1,5 @@
 
 pointclouds
+
+__pycache__/
+*.pyc
